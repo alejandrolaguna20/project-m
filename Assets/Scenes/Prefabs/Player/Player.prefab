@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerModel: {fileID: 1794678951625343697}
+  playerCamera: {fileID: 1618112426488054922}
   moveSpeed: 5
   jumpHeight: 3
   gravity: -9.81
@@ -286,7 +287,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 200
   field of view: 60
   orthographic: 0
   orthographic size: 5

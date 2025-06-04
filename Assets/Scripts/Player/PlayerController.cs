@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public CharacterController PlayerModel;
+    public Camera playerCamera;     
     public float moveSpeed = 5f;
     public float jumpHeight = 3f;
     public float gravity = -9.81f;
@@ -33,15 +34,25 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         isGrounded = PlayerModel.isGrounded;
-        
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f; // small downward force to stay grounded
         }
 
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
-        Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 cameraForward = playerCamera.transform.forward;
+        Vector3 cameraRight = playerCamera.transform.right;
+        
+        // set y to 0 so it only rotates left/right
+        cameraForward.y = 0;
+        cameraRight.y = 0;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
 
+        // TODO: rotate movement of the player model as well
+
+        Vector3 movement = cameraForward * moveInput.y + cameraRight * moveInput.x;
+        
         PlayerModel.Move(movement * getCurrentMoveSpeed() * Time.deltaTime);
 
         if (jumpAction.WasPressedThisFrame() && isGrounded)

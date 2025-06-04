@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction sprintAction;
     private Vector3 velocity;
     private bool isGrounded;
 
@@ -17,6 +18,16 @@ public class PlayerController : MonoBehaviour
     {
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+        sprintAction = InputSystem.actions.FindAction("Sprint");
+    }
+
+    private float getCurrentMoveSpeed()
+    {
+        float isSprinting = sprintAction.ReadValue<float>();
+        if (isSprinting == 1) {
+            return moveSpeed * 2f;
+        }
+        return moveSpeed;
     }
 
     void Update()
@@ -30,7 +41,8 @@ public class PlayerController : MonoBehaviour
 
         Vector2 moveInput = moveAction.ReadValue<Vector2>();
         Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y);
-        PlayerModel.Move(movement * moveSpeed * Time.deltaTime);
+
+        PlayerModel.Move(movement * getCurrentMoveSpeed() * Time.deltaTime);
 
         if (jumpAction.WasPressedThisFrame() && isGrounded)
         {

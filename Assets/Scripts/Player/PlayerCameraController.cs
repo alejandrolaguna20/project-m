@@ -5,22 +5,22 @@ public class OrbitCameraController : MonoBehaviour
 {
     [Header("Target")]
     [SerializeField] private Transform target;
-    
+
     [Header("Distance Settings")]
     [SerializeField] private float initialDistance = 20f;
     [SerializeField] private float minDistance = 2f;
     [SerializeField] private float maxDistance = 20f;
     [SerializeField] private float zoomSensitivity = 5f;
-    
+
     [Header("Rotation Settings")]
     [SerializeField] private float mouseSensitivity = 2f;
     [SerializeField] private float minVerticalAngle = -80f;
     [SerializeField] private float maxVerticalAngle = 80f;
-    
+
     [Header("Player Rotation")]
     [SerializeField] private bool rotatePlayerWithCamera = true;
     [SerializeField] private float playerRotationSpeed = 10f; // For smooth rotation
-    
+
     private Camera cam;
     private float currentDistance;
     private float horizontalAngle;
@@ -30,7 +30,7 @@ public class OrbitCameraController : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         currentDistance = initialDistance;
-        
+
         if (target == null)
         {
             Debug.LogWarning("No target assigned to OrbitCameraController!");
@@ -40,7 +40,7 @@ public class OrbitCameraController : MonoBehaviour
     private void Update()
     {
         if (target == null) return;
-        
+
         HandleInput();
         UpdateCameraTransform();
     }
@@ -68,20 +68,20 @@ public class OrbitCameraController : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0, horizontalAngle, 0);
             target.rotation = Quaternion.Slerp(target.rotation, targetRotation, playerRotationSpeed * Time.deltaTime);
         }
-        
+
         Quaternion rotation = Quaternion.Euler(verticalAngle, horizontalAngle, 0f);
         Vector3 position = target.position + rotation * Vector3.back * currentDistance;
-        
+
         transform.position = position;
         transform.LookAt(target);
     }
-    
+
     // Public method to get camera's forward direction for player movement
     public Vector3 GetCameraForward()
     {
         return Quaternion.Euler(0, horizontalAngle, 0) * Vector3.forward;
     }
-    
+
     public Vector3 GetCameraRight()
     {
         return Quaternion.Euler(0, horizontalAngle, 0) * Vector3.right;
